@@ -41,7 +41,7 @@
 
 ## Part 2: 使用TuriCreate训练模型
 
-[TuriCreate](https://github.com/apple/turicreate)是苹果提供的用于简化在苹果设备上进行机器学习任务的工具，它提供了一些预训练的模型，使用者只需要提供少量的数据就可以通过迁移学习得到高性能模型。
+[TuriCreate](https://github.com/apple/turicreate)是苹果提供的用于简化在苹果设备上进行机器学习任务的工具，它提供了一些预训练的模型，使用者只需要提供少量的数据就可以通过迁移学习得到高性能模型。（建议用实验室机器，M1不支持）
 
 将第一步得到的数据放入到指定的目录，并运行[notebook](),就可以使用TuriCreate进行训练，并得到CoreML模型。
 
@@ -54,3 +54,9 @@
 这个模型是一个[LSTM]()，它的特点是会将神经元的输出作为下一次的输入，因此在进行预测时，会考虑历史的数据，因此非常适用于类似于文本、信号等序列数据。
 
 我们可以看到模型除了会输出预测的activaty以及概率，还会输出网络的hiddenOut和cellOut，这两部分可以作为网络的可选输入。因此你的App中，应该采集多个window的features，并将前一次预测的输出中的cellOut和hiddenOut连同下一个feature一起输入到模型中。从多次预测结果中选取概率最大的。
+
+实现activity-classification工程中的两个函数
+```
+func buffer(motionData: CMDeviceMotion)
+func predictGesture(window: Int)
+```

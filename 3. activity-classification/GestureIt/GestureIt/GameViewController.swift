@@ -25,7 +25,6 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
-
 import UIKit
 import AVFoundation
 import CoreMotion
@@ -80,7 +79,6 @@ class GameViewController: UIViewController, AVSpeechSynthesizerDelegate {
   }
 
   // MARK: - Core Motion properties
-
   let motionManager = CMMotionManager()
   let queue = OperationQueue()
 
@@ -92,6 +90,7 @@ class GameViewController: UIViewController, AVSpeechSynthesizerDelegate {
   var bufferIndex = 0
   var isDataAvailable = false
   
+  let gestureClassifier = GestureClassifier()
   
   var modelOutputs = [GestureClassifierOutput?](repeating: nil, count: Config.numberOfWindows)
 
@@ -103,7 +102,6 @@ class GameViewController: UIViewController, AVSpeechSynthesizerDelegate {
   var score = 0
   
   // MARK: - UI
-
   let speechSynth = AVSpeechSynthesizer()
 
   @IBOutlet var scoreLabel: UILabel!
@@ -301,14 +299,26 @@ class GameViewController: UIViewController, AVSpeechSynthesizerDelegate {
   }
   
   func process(motionData: CMDeviceMotion) {
-    
+    // 1
     guard expectedGesture != nil else {
       return
     }
-    // send data to buffer
-    // process data in buffer
-    // call func predictGesture
-      predictGesture(window: window)
+    
+    buffer(motionData: motionData)
+    bufferIndex = (bufferIndex + 1) % Config.windowSize
+    if bufferIndex == 0 {
+      isDataAvailable = true
+    }
+
+    if isDataAvailable &&
+       bufferIndex % Config.windowOffset == 0 &&
+       bufferIndex + Config.windowOffset <= Config.windowSize {
+      let window = bufferIndex / Config.windowOffset
+      memcpy(modelInput.dataPointer,
+             dataBuffer.dataPointer.advanced(
+               by: window * Config.windowOffsetAsBytes),
+             Config.windowSizeAsBytes)
+     predictGesture(window: window)
     }
   }
   
@@ -317,11 +327,12 @@ class GameViewController: UIViewController, AVSpeechSynthesizerDelegate {
   }
   
   func buffer(motionData: CMDeviceMotion) {
-    // fill data to buffer
-    
+    // TODO
   }
 
   func predictGesture(window: Int) {
+    // TODO
+    
   }
 
   func resetPredictionWindows() {

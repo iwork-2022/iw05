@@ -23,6 +23,8 @@
 
 本次作业使用的Python环境为[turi-env.yaml](./turi-env.yaml)。
 
+数据下载地址 https://box.nju.edu.cn/f/ecd834194b2d49b1aab6/?dl=1
+
 ## Part 1: 数据收集&数据清洗
 
 1. CoreMotion
